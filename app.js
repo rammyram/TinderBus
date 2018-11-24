@@ -21,7 +21,8 @@ app.post('/fb',  function(req,res){
   app.messageHandler(req.body, function(result) {
       console.log("Async Handled: " + result);
   })
-  res.send(req.body)
+  res.send(req.body);
+  console.log("hello");
 })
 
 app.get('/fb', function(req, res) {
