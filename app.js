@@ -1,11 +1,12 @@
-var express        = require('express'),
-    bodyParser     = require('body-parser'),
-    http           = require('http'),
-    server         = require('request'),
-    privateHtml    = require('./privacy');
+var express = require("express"),
+  bodyParser = require("body-parser"),
+  http = require("http"),
+  privateHtml = require("./privacy"),
+  request = require("request");
     app            = express();
    
-var token = 'EAAEaUgjyijIBAIyHcZClsEXUmiyEKZCSEn9vyWMQwS5P9RGOwhyU9VZAy8sRFFmuoZCGBKqEYuq1bVzEHONirDeqTqnnZCQ0JyZAiWMvn2Gpscg1MkLuLrlmWhCk8duZBM82hkntTZCDn0TvJQA1cqH3wPODxgit4ZAsBVr0L1dzyCdDBtPPcxfFE';
+var token =
+  "EAAEaUgjyijIBAOz87xlbMxjBg2KybvJV0ZCel1VJkfa4uHq8wHQYgj6KC7hWOkUw7O48jp3B7ZAFAZCtvStcRZAUncNoz464Ns7j3FjpFNem3NyaBcoC7eFDYmLA1shRYjtCswuEoBkfUyaZAOzXpAQVkKZCDkCYn9DpB5QtNtdKkpjvfpXyEI";
 app.use(bodyParser.json());
 
 // set port
@@ -17,12 +18,22 @@ app.get('/health', function(req, res) {
 });
 
 app.post('/fb',  function(req,res){
-  console.log(JSON.stringify(req.body));
-  app.messageHandler(req.body, function(result) {
-      console.log("Async Handled: " + result);
-  })
+  var userPSID = req.body.entry[0].messaging[0].sender.id;
+  request.post(
+    "https://graph.facebook.com/v2.6/me/messages?access_token=" + token,
+    {
+      json: {
+        messaging_type: "RESPONSE",
+        recipient: {
+          id: userPSID
+        },
+        message: {
+          text: "hello, world!"
+        }
+      }
+    }
+  );
   res.send(req.body);
-  console.log("hello");
 })
 
 app.get('/fb', function(req, res) {
